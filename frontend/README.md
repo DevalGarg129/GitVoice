@@ -1,18 +1,110 @@
-# React + Vite
+# GitHub Repo Summarizer - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React + Vite frontend for the AI-powered GitHub repository analyzer.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 🎨 Modern Material-UI interface
+- 🔍 Analyze any public GitHub repository
+- 📊 Visual tech stack badges
+- 🌳 Repository tree view
+- 💬 Interactive chat with AI about repos
+- 📱 Responsive design
 
-## React Compiler
+## Setup Instructions
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+### 1. Install Dependencies
 
-Note: This will impact Vite dev & build performances.
+```bash
+npm install
+```
 
-## Expanding the ESLint configuration
+### 2. Configure Environment Variables
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Create a `.env` file in the frontend directory:
+
+```env
+VITE_API_URL=http://localhost:5000/api
+```
+
+If your backend runs on a different port or URL, update `VITE_API_URL` accordingly.
+
+### 3. Start Development Server
+
+```bash
+npm run dev
+```
+
+The app will be available at http://localhost:5173
+
+### 4. Build for Production
+
+```bash
+npm run build
+```
+
+The production build will be in the `dist/` directory.
+
+## Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `VITE_API_URL` | Backend API URL | http://localhost:5000/api |
+
+## Usage
+
+1. Enter a GitHub repository URL (e.g., `https://github.com/username/repo`)
+2. Click "Analyze Repository"
+3. View:
+   - AI-generated summary
+   - Detected tech stack
+   - Repository structure
+   - Deep analysis
+
+## Tech Stack
+
+- React 18
+- Vite
+- Material-UI (MUI)
+- Axios for API calls
+- React Hooks
+
+## Project Structure
+
+```
+src/
+├── Components/       # Reusable UI components
+├── pages/           # Page components
+├── services/        # API service layers
+├── context/         # React context providers
+├── hooks/           # Custom React hooks
+└── assets/          # Static assets
+```
+
+## Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
+
+## Connecting to Backend
+
+Make sure:
+1. Backend server is running on http://localhost:5000
+2. Backend has a valid Gemini API key configured
+3. CORS is properly configured on the backend
+
+## Troubleshooting
+
+### "Network Error" or API calls failing
+
+- Check if backend is running
+- Verify `VITE_API_URL` in `.env`
+- Check browser console for CORS errors
+
+### Vite environment variables not working
+
+- Environment variables must start with `VITE_`
+- Restart dev server after changing `.env`
+- Use `import.meta.env.VITE_VARIABLE_NAME` to access them

@@ -1,4 +1,9 @@
 import axios from "axios";
+import geminiConfig from "../config/gemini.js";
+
+const getGeminiUrl = () => {
+  return `${geminiConfig.apiUrl}/${geminiConfig.model}:generateContent?key=${geminiConfig.apiKey}`;
+};
 
 export const summarizeRepoWithGemini = async (repoData) => {
   const prompt = `
@@ -19,14 +24,19 @@ Provide:
 5. Setup Instructions
 `;
 
-  const response = await axios.post(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${process.env.GEMINI_API_KEY}`,
-    {
-      contents: [{ parts: [{ text: prompt }] }],
-    },
-  );
+  try {
+    const response = await axios.post(
+      getGeminiUrl(),
+      {
+        contents: [{ parts: [{ text: prompt }] }],
+      },
+    );
 
-  return response.data.candidates[0].content.parts[0].text;
+    return response.data.candidates[0].content.parts[0].text;
+  } catch (error) {
+    console.error("Gemini API Error:", error.response?.data || error.message);
+    throw new Error("Failed to generate repo summary. Check your Gemini API key.");
+  }
 };
 
 export const explainCodeWithGemini = async (fileData) => {
@@ -47,14 +57,19 @@ Explain:
 4. Suggestions if any
 `;
 
-  const response = await axios.post(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${process.env.GEMINI_API_KEY}`,
-    {
-      contents: [{ parts: [{ text: prompt }] }],
-    },
-  );
+  try {
+    const response = await axios.post(
+      getGeminiUrl(),
+      {
+        contents: [{ parts: [{ text: prompt }] }],
+      },
+    );
 
-  return response.data.candidates[0].content.parts[0].text;
+    return response.data.candidates[0].content.parts[0].text;
+  } catch (error) {
+    console.error("Gemini API Error:", error.response?.data || error.message);
+    throw new Error("Failed to explain code. Check your Gemini API key.");
+  }
 };
 
 export const chatWithGemini = async (repoData, question) => {
@@ -72,12 +87,17 @@ ${question}
 Answer in a detailed developer-friendly way.
 `;
 
-  const response = await axios.post(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${process.env.GEMINI_API_KEY}`,
-    {
-      contents: [{ parts: [{ text: prompt }] }],
-    },
-  );
+  try {
+    const response = await axios.post(
+      getGeminiUrl(),
+      {
+        contents: [{ parts: [{ text: prompt }] }],
+      },
+    );
 
-  return response.data.candidates[0].content.parts[0].text;
+    return response.data.candidates[0].content.parts[0].text;
+  } catch (error) {
+    console.error("Gemini API Error:", error.response?.data || error.message);
+    throw new Error("Failed to get AI response. Check your Gemini API key.");
+  }
 };
