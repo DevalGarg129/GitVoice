@@ -145,6 +145,24 @@ The free tier of Gemini API has rate limits. If you hit them:
 - Add `.env` to `.gitignore`
 - Use different API keys for development and production
 
+### If secrets were committed (what to do immediately)
+
+- **Revoke & rotate**: Revoke any exposed API keys (eg. Gemini/Google key) and rotate the MongoDB user credentials immediately via your provider's dashboard.
+- **Restrict access**: For MongoDB Atlas, restrict the database user's network access (IP whitelist) and create a new user with a strong password.
+- **Purge from history**: Remove the committed secret from Git history (use `git rm --cached backend/.env` then commit). For complete removal, use `git filter-repo` or the BFG Repo Cleaner to purge the secret from past commits.
+- **Update deployments**: After rotation, update environment variables in your hosting/deployment platform with the new values.
+- **Audit**: Check logs and usage for any suspicious activity and rotate other keys if in doubt.
+
+Example commands to remove the file from the index and commit the sanitized `.env`:
+
+```bash
+git rm --cached backend/.env
+git add backend/.env
+git commit -m "chore: remove committed secrets from .env and replace with placeholders"
+```
+
+If you need to fully purge the secret from the repository history (recommended for public repos), follow the BFG or `git filter-repo` documentation: https://rtyley.github.io/bfg-repo-cleaner/ or https://github.com/newren/git-filter-repo
+
 ## License
 
 ISC
