@@ -1,7 +1,23 @@
-const { getGemini } = require("../config/gemini").default;
-
+const { getGemini } = require("../config/gemini");
+const generateWithRetry = async (model, prompt, retries = 3) => {
+  for (let i = 0; i < retries; i++) {
+    try {
+      const result = await model.generateContent(prompt);
+      return result.response.text();
+    } catch (err) {
+      if (err.status === 429 && i < retries - 1) {
+        // Extract retry delay from error or default to 60s
+        const delay = 60000;
+        console.log(`⏳ Gemini rate limited. Retrying in ${delay/1000}s...`);
+        await new Promise(r => setTimeout(r, delay));
+      } else {
+        throw err;
+      }
+    }
+  }
+};
 const generateSummary = async (repoData, langBreakdown, commits) => {
-  const model = getGemini();
+  const model = await getGemini();
   const topLangs = langBreakdown
     .slice(0, 5)
     .map((l) => `${l.name} (${l.pct}%)`)
@@ -47,7 +63,7 @@ Return ONLY the JSON, no markdown, no extra text.`;
 };
 
 const explainFile = async (filename, content, repoName) => {
-  const model = getGemini();
+  const model = await getGemini();
   const truncated =
     content.length > 8000
       ? content.slice(0, 8000) + "\n... (truncated)"
@@ -84,7 +100,7 @@ Return ONLY the JSON.`;
 };
 
 const chatWithRepo = async (messages, repoContext) => {
-  const model = getGemini();
+  const model = await getGemini();
 
   const systemContext = `You are GitVoice AI, an expert GitHub repository analyst and software engineer.
 You are helping a developer understand this repository:
@@ -111,7 +127,7 @@ Format code in markdown code blocks. Keep answers focused.`;
 };
 
 const detectTechStack = async (repoData, langBreakdown, files) => {
-  const model = getGemini();
+  const model = await getGemini();
   const fileList = files
     .map((f) => f.path)
     .slice(0, 100)
