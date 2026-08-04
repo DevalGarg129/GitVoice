@@ -40,7 +40,7 @@ app.use((req, res) => {
 
 // ── Global error handler ──
 app.use((err, req, res, next) => {
-  console.error("❌ Error:", err);
+  console.error("Error:", err);
   if (err && err.stack) console.error(err.stack);
   // If the error comes from an axios/GitHub response, log useful details
   if (err && err.response) {
@@ -58,5 +58,5 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`🚀 GitVoice backend running on port ${PORT}`);
+  console.log(`GitVoice backend running on port ${PORT}`);
 });
